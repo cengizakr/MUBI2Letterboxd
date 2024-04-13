@@ -21,7 +21,7 @@ with open('films.csv', mode='w', newline='') as file:
         for x in data:
             title = x["film"]["title"]
             year =  x["film"]["year"]
-            print(data)
+            # print(data)
             writer.writerow([title, year])
             
         page = page +1
