@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>MUBI to Letterboxd</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  </head>
+  <body>
+    <main class="page">
+      <section class="panel" aria-labelledby="page-title">
+        <p class="eyebrow">Watchlist transfer</p>
+        <h1 id="page-title">Move your MUBI watchlist to Letterboxd</h1>
+        <p class="summary">
+          Paste your MUBI profile link. This creates a small file that Letterboxd can
+          import into your watchlist.
+        </p>
+
+        <form class="export-form" action="{{ url_for('export') }}" method="post">
+          <label for="mubi_url">MUBI profile link</label>
+          <div class="input-row">
+            <input
+              id="mubi_url"
+              name="mubi_url"
+              type="text"
+              inputmode="url"
+              placeholder="https://mubi.com/en/users/10335289"
+              value="{{ mubi_url or '' }}"
+              autocomplete="url"
+              required
+            >
+            <button type="submit">Create Letterboxd file</button>
+          </div>
+          <p class="field-help">
+            Works with links like <code>https://mubi.com/en/users/10335289</code>,
+            watchlist links, or just the profile number.
+          </p>
+        </form>
+
+        {% if error %}
+          <p class="error" role="alert">{{ error }}</p>
+        {% endif %}
+
+        <div class="guide" aria-label="Transfer steps">
+          <article>
+            <span>1</span>
+            <h2>Find your MUBI profile</h2>
+            <p>Open MUBI in your browser, go to your profile page, and copy the address from the top bar.</p>
+          </article>
+          <article>
+            <span>2</span>
+            <h2>Download the file</h2>
+            <p>Paste the profile link above. Your browser will download a file named for Letterboxd.</p>
+          </article>
+          <article>
+            <span>3</span>
+            <h2>Import on Letterboxd</h2>
+            <p>
+              Open <a href="https://letterboxd.com/import/" target="_blank" rel="noreferrer">Letterboxd import</a>,
+              choose the downloaded file, and import it as your watchlist.
+            </p>
+          </article>
+        </div>
+
+        <details class="help-box">
+          <summary>What is the downloaded file?</summary>
+          <p>
+            It is a simple spreadsheet-style file with movie titles and years. You do not need to open or edit it;
+            Letterboxd reads it during import.
+          </p>
+        </details>
+      </section>
+    </main>
+  </body>
+</html>
