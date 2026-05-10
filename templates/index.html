@@ -4,21 +4,43 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>MUBI to Letterboxd</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Hanken+Grotesk:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
   </head>
-  <body>
-    <main class="page">
-      <section class="panel" aria-labelledby="page-title">
-        <p class="eyebrow">Watchlist transfer</p>
-        <h1 id="page-title">Move your MUBI watchlist to Letterboxd</h1>
-        <p class="summary">
-          Paste your MUBI profile link. This creates a small file that Letterboxd can
-          import into your watchlist.
-        </p>
 
-        <form class="export-form" action="{{ url_for('export') }}" method="post">
-          <label for="mubi_url">MUBI profile link</label>
+  <body>
+    <!-- atmosphere -->
+    <div class="optics" aria-hidden="true">
+      <div class="optic optic--red"></div>
+      <div class="optic optic--orange"></div>
+      <div class="optic optic--green"></div>
+    </div>
+    <div class="grain" aria-hidden="true"></div>
+
+    <main class="page">
+      <section class="intro" aria-labelledby="page-title">
+        <p class="kicker"><span class="kicker-dot" aria-hidden="true"></span>MUBI · Letterboxd</p>
+        <h1 id="page-title">Move your <em>watchlist</em> across the&nbsp;aisle.</h1>
+        <p class="summary">
+          Paste your public MUBI profile or watchlist link. We generate a CSV file
+          you can import into Letterboxd. <span class="hl">Nothing is stored.</span>
+        </p>
+      </section>
+
+      <section class="tool" aria-labelledby="form-title">
+        <div class="tool-header">
+          <h2 id="form-title">Create your Letterboxd file</h2>
+          <p>Your browser receives the CSV directly.</p>
+        </div>
+
+        <form action="{{ url_for('export') }}" method="post" class="export-form">
+          <label for="mubi_url"><span class="label-tag">01</span>MUBI profile or watchlist</label>
           <div class="input-row">
+            <span class="input-prefix">URL ·</span>
             <input
               id="mubi_url"
               name="mubi_url"
@@ -26,50 +48,47 @@
               inputmode="url"
               placeholder="https://mubi.com/en/users/10335289"
               value="{{ mubi_url or '' }}"
-              autocomplete="url"
+              autocomplete="off"
+              spellcheck="false"
               required
             >
-            <button type="submit">Create Letterboxd file</button>
           </div>
-          <p class="field-help">
-            Works with links like <code>https://mubi.com/en/users/10335289</code>,
-            watchlist links, or just the profile number.
+          <p class="help-text">
+            Accepts profile URLs, watchlist URLs, or a numeric MUBI <code>user_id</code>.
           </p>
+
+          {% if error %}
+            <p class="error" role="alert">{{ error }}</p>
+          {% endif %}
+
+          <button type="submit">
+            <span>Download CSV</span>
+            <span class="arrow">→</span>
+          </button>
         </form>
-
-        {% if error %}
-          <p class="error" role="alert">{{ error }}</p>
-        {% endif %}
-
-        <div class="guide" aria-label="Transfer steps">
-          <article>
-            <span>1</span>
-            <h2>Find your MUBI profile</h2>
-            <p>Open MUBI in your browser, go to your profile page, and copy the address from the top bar.</p>
-          </article>
-          <article>
-            <span>2</span>
-            <h2>Download the file</h2>
-            <p>Paste the profile link above. Your browser will download a file named for Letterboxd.</p>
-          </article>
-          <article>
-            <span>3</span>
-            <h2>Import on Letterboxd</h2>
-            <p>
-              Open <a href="https://letterboxd.com/import/" target="_blank" rel="noreferrer">Letterboxd import</a>,
-              choose the downloaded file, and import it as your watchlist.
-            </p>
-          </article>
-        </div>
-
-        <details class="help-box">
-          <summary>What is the downloaded file?</summary>
-          <p>
-            It is a simple spreadsheet-style file with movie titles and years. You do not need to open or edit it;
-            Letterboxd reads it during import.
-          </p>
-        </details>
       </section>
+
+      <section class="steps" aria-labelledby="steps-title">
+        <h2 id="steps-title">What to do next</h2>
+        <ol>
+          <li>
+            <span class="num">i</span>
+            <p><strong>Download the CSV.</strong> Paste your MUBI link above and click Download CSV.</p>
+          </li>
+          <li>
+            <span class="num">ii</span>
+            <p><strong>Open Letterboxd import.</strong> Go to <a href="https://letterboxd.com/import/" target="_blank" rel="noreferrer">letterboxd.com/import</a>.</p>
+          </li>
+          <li>
+            <span class="num">iii</span>
+            <p><strong>Upload the file.</strong> Choose the downloaded CSV and import the rows as watchlist items.</p>
+          </li>
+        </ol>
+      </section>
+
+      <footer class="footer">
+        <p>Unofficial tool · Not affiliated with MUBI or Letterboxd.</p>
+      </footer>
     </main>
   </body>
 </html>

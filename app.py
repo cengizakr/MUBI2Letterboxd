@@ -1,12 +1,31 @@
+import time
+from collections import defaultdict, deque
+
 from flask import Flask, Response, render_template, request
 
-from mubi2lttrbx import MubiExportError, build_letterboxd_csv, extract_user_id, fetch_watchlist
+from mubi2lttrbx import (
+    DEFAULT_MAX_FILMS,
+    MubiExportError,
+    build_letterboxd_csv,
+    extract_user_id,
+    fetch_watchlist,
+)
 
 
 app = Flask(__name__)
 
+MAX_INPUT_LENGTH = 300
+RATE_LIMIT_REQUESTS = 5
+RATE_LIMIT_WINDOW_SECONDS = 60
+RATE_LIMIT_BUCKETS: dict[str, deque[float]] = defaultdict(deque)
+
 
 def format_error(message: str) -> str:
+    if "larger than" in message and "film limit" in message:
+        return (
+            f"That watchlist is too large for this tool. "
+            f"The current limit is {DEFAULT_MAX_FILMS} films."
+        )
     if "Could not find a numeric MUBI user id" in message:
         return (
             "I could not find the MUBI profile number in that text. "
@@ -23,6 +42,35 @@ def format_error(message: str) -> str:
     return message
 
 
+def client_ip() -> str:
+    forwarded_for = request.headers.get("X-Forwarded-For", "")
+    if forwarded_for:
+        return forwarded_for.split(",", 1)[0].strip()
+    return request.remote_addr or "unknown"
+
+
+def rate_limited(ip_address: str) -> bool:
+    now = time.time()
+    bucket = RATE_LIMIT_BUCKETS[ip_address]
+
+    while bucket and now - bucket[0] > RATE_LIMIT_WINDOW_SECONDS:
+        bucket.popleft()
+
+    if len(bucket) >= RATE_LIMIT_REQUESTS:
+        return True
+
+    bucket.append(now)
+    return False
+
+
+@app.after_request
+def add_privacy_headers(response):
+    response.headers["Cache-Control"] = "no-store"
+    response.headers["Pragma"] = "no-cache"
+    response.headers["Referrer-Policy"] = "no-referrer"
+    return response
+
+
 @app.get("/")
 def index():
     return render_template("index.html")
@@ -31,11 +79,32 @@ def index():
 @app.post("/export")
 def export():
     source = request.form.get("mubi_url", "").strip()
+    ip_address = client_ip()
+
+    if rate_limited(ip_address):
+        return (
+            render_template(
+                "index.html",
+                error="Too many export attempts. Wait a minute, then try again.",
+                mubi_url=source,
+            ),
+            429,
+        )
+
+    if len(source) > MAX_INPUT_LENGTH:
+        return (
+            render_template(
+                "index.html",
+                error="That input is too long. Paste only the MUBI profile link.",
+                mubi_url="",
+            ),
+            400,
+        )
 
     try:
         user_id = extract_user_id(source)
-        films = fetch_watchlist(user_id)
-    except MubiExportError as exc:
+        films = fetch_watchlist(user_id, max_films=DEFAULT_MAX_FILMS)
+    except (MubiExportError, ValueError) as exc:
         return render_template("index.html", error=format_error(str(exc)), mubi_url=source), 400
 
     if not films:

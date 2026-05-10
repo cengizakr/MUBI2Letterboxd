@@ -2,15 +2,16 @@
 
 ## Current Step
 
-- Add production safeguards: timeouts, no saved CSV files, and basic rate limiting notes.
+- Prepare deployment files and instructions.
 
 ## Next Steps
 
-- Add production safeguards: timeouts, no saved CSV files, and basic rate limiting notes.
 - Prepare deployment files and instructions.
 
 ## Done
 
+- Added production safeguards: stricter input validation, request timeout, max watchlist size, simple per-IP rate limit, no-store headers, and no saved CSV files.
+- Added the unofficial-tool disclaimer.
 - Improved user-facing error messages.
 - Updated the UI for people who do not know what URL to paste or what to do with the downloaded file.
 - Created the first website version with a Python backend and a simple download page.

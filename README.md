@@ -23,6 +23,16 @@ http://127.0.0.1:5000
 - MUBI watchlist URL, for example `https://mubi.com/en/users/10335289/watchlist`
 - Numeric MUBI user ID, for example `10335289`
 
+## Safeguards
+
+- Rejects non-MUBI links.
+- Uses request timeouts when calling MUBI.
+- Limits exports to 5,000 watchlist films.
+- Applies a simple per-IP rate limit.
+- Does not store submitted links, watchlists, or generated CSV files.
+
+This is an unofficial tool and is not affiliated with MUBI or Letterboxd.
+
 ## CLI usage
 
 ```bash

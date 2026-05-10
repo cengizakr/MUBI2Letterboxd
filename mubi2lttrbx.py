@@ -14,6 +14,7 @@ import requests
 API_URL = "https://mubi.com/services/api/wishes"
 DEFAULT_OUTPUT = "films.csv"
 DEFAULT_PER_PAGE = 24
+DEFAULT_MAX_FILMS = 5000
 REQUEST_TIMEOUT = 15
 USER_AGENT = "mubi2letterboxd/1.0"
 
@@ -37,8 +38,15 @@ def extract_user_id(value: str) -> str:
     if value.isdigit():
         return value
 
-    parsed = urlparse(value)
-    if parsed.netloc and "mubi.com" not in parsed.netloc.lower():
+    first_path_part = value.split("/", 1)[0]
+    candidate = f"https://{value}" if "://" not in value and "." in first_path_part else value
+    parsed = urlparse(candidate)
+
+    if parsed.netloc:
+        hostname = (parsed.hostname or "").lower()
+        if hostname != "mubi.com" and not hostname.endswith(".mubi.com"):
+            raise MubiExportError("That does not look like a MUBI URL.")
+    elif not re.match(r"^/?(?:[a-z]{2}/)?users/\d+(?:/|$)", parsed.path):
         raise MubiExportError("That does not look like a MUBI URL.")
 
     match = re.search(r"(?:^|/)users/(\d+)(?:/|$)", parsed.path)
@@ -55,11 +63,14 @@ def fetch_watchlist(
     user_id: str,
     *,
     per_page: int = DEFAULT_PER_PAGE,
+    max_films: int = DEFAULT_MAX_FILMS,
     session: requests.Session | None = None,
 ) -> list[Film]:
     """Fetch all films from a public MUBI watchlist."""
     if per_page < 1:
         raise ValueError("per_page must be greater than zero.")
+    if max_films < 1:
+        raise ValueError("max_films must be greater than zero.")
 
     client = session or requests.Session()
     films: list[Film] = []
@@ -106,6 +117,10 @@ def fetch_watchlist(
                 continue
 
             films.append(Film(title=str(title), year=film_data.get("year")))
+            if len(films) > max_films:
+                raise MubiExportError(
+                    f"That watchlist is larger than the {max_films}-film limit."
+                )
 
         page += 1
 
@@ -127,9 +142,15 @@ def build_letterboxd_csv(films: Iterable[Film]) -> str:
     return buffer.getvalue()
 
 
-def export_watchlist(source: str, output_path: Path, *, per_page: int = DEFAULT_PER_PAGE) -> int:
+def export_watchlist(
+    source: str,
+    output_path: Path,
+    *,
+    per_page: int = DEFAULT_PER_PAGE,
+    max_films: int = DEFAULT_MAX_FILMS,
+) -> int:
     user_id = extract_user_id(source)
-    films = fetch_watchlist(user_id, per_page=per_page)
+    films = fetch_watchlist(user_id, per_page=per_page, max_films=max_films)
 
     with output_path.open("w", encoding="utf-8", newline="") as file_obj:
         write_letterboxd_csv(films, file_obj)
