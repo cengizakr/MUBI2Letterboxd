@@ -7,7 +7,7 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Hanken+Grotesk:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Hanken+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
   </head>
@@ -24,49 +24,84 @@
     <main class="page">
       <section class="intro" aria-labelledby="page-title">
         <p class="kicker"><span class="kicker-dot" aria-hidden="true"></span>MUBI · Letterboxd</p>
-        <h1 id="page-title">Move your <em>watchlist</em> across the&nbsp;aisle.</h1>
+        <h1 id="page-title">Export your MUBI watchlist to Letterboxd.</h1>
+        <p class="tagline"><em>Move your watchlist across the aisle.</em></p>
         <p class="summary">
-          Paste your public MUBI profile or watchlist link. We generate a CSV file
-          you can import into Letterboxd. <span class="hl">Nothing is stored.</span>
+          Paste your public MUBI profile or watchlist link. We generate a
+          Letterboxd-compatible CSV you can import in one click.
+        </p>
+        <p class="privacy-badge" role="note">
+          <span class="privacy-dot" aria-hidden="true"></span>
+          <span><strong>Nothing is stored.</strong> No login, no account, no tracking. The CSV is built and sent straight to your browser.</span>
         </p>
       </section>
 
-      <section class="tool" aria-labelledby="form-title">
-        <div class="tool-header">
-          <h2 id="form-title">Create your Letterboxd file</h2>
-          <p>Your browser receives the CSV directly.</p>
-        </div>
-
-        <form action="{{ url_for('export') }}" method="post" class="export-form">
-          <label for="mubi_url"><span class="label-tag">01</span>MUBI profile or watchlist</label>
-          <div class="input-row">
-            <span class="input-prefix">URL ·</span>
-            <input
-              id="mubi_url"
-              name="mubi_url"
-              type="text"
-              inputmode="url"
-              placeholder="https://mubi.com/en/users/10335289"
-              value="{{ mubi_url or '' }}"
-              autocomplete="off"
-              spellcheck="false"
-              required
-            >
+      <div class="workbench">
+        <section class="tool" aria-labelledby="form-title">
+          <div class="tool-header">
+            <h2 id="form-title">Create a Letterboxd-compatible CSV</h2>
+            <p>Paste a link below. Your browser receives the CSV directly &mdash; no upload, no signup.</p>
           </div>
-          <p class="help-text">
-            Accepts profile URLs, watchlist URLs, or a numeric MUBI <code>user_id</code>.
-          </p>
 
-          {% if error %}
-            <p class="error" role="alert">{{ error }}</p>
-          {% endif %}
+          <form action="{{ url_for('export') }}" method="post" class="export-form">
+            <label for="mubi_url"><span class="label-tag">01</span>MUBI profile or watchlist link</label>
+            <div class="input-row">
+              <span class="input-prefix">URL</span>
+              <input
+                id="mubi_url"
+                name="mubi_url"
+                type="text"
+                inputmode="url"
+                placeholder="https://mubi.com/en/users/10335289"
+                value="{{ mubi_url or '' }}"
+                autocomplete="off"
+                spellcheck="false"
+                required
+              >
+            </div>
+            <p class="help-text">
+              Accepts profile URLs, watchlist URLs, or a numeric MUBI <code>user_id</code>.
+            </p>
 
-          <button type="submit">
-            <span>Download CSV</span>
-            <span class="arrow">→</span>
-          </button>
-        </form>
-      </section>
+            {% if error %}
+              <p class="error" role="alert">{{ error }}</p>
+            {% endif %}
+
+            <button type="submit">
+              <span>Download CSV</span>
+              <span class="arrow">&rarr;</span>
+            </button>
+          </form>
+        </section>
+
+        <aside class="side" aria-label="What you'll get">
+          <div class="side-card">
+            <p class="side-eyebrow">Preview</p>
+            <h3>What the CSV looks like</h3>
+            <pre class="csv-preview" aria-hidden="true">Title,Year
+Stalker,1979
+In the Mood for Love,2000
+Close-Up,1990
+Mulholland Drive,2001
+Petite Maman,2021</pre>
+            <p class="side-note">A simple two-column file. Letterboxd reads it natively.</p>
+          </div>
+
+          <div class="side-card">
+            <p class="side-eyebrow">Good to know</p>
+            <dl class="faq">
+              <dt>Do I need to log in?</dt>
+              <dd>No. The tool only reads your public watchlist.</dd>
+              <dt>Does it work with private watchlists?</dt>
+              <dd>No &mdash; your MUBI profile must be public.</dd>
+              <dt>Is my data stored?</dt>
+              <dd>Never. The CSV is generated in memory and discarded after download.</dd>
+              <dt>What do I do with the file?</dt>
+              <dd>Upload it at <a href="https://letterboxd.com/import/" target="_blank" rel="noreferrer">letterboxd.com/import</a>.</dd>
+            </dl>
+          </div>
+        </aside>
+      </div>
 
       <section class="steps" aria-labelledby="steps-title">
         <h2 id="steps-title">What to do next</h2>
@@ -87,7 +122,7 @@
       </section>
 
       <footer class="footer">
-        <p>Unofficial tool · Not affiliated with MUBI or Letterboxd.</p>
+        <p>Unofficial tool &middot; Not affiliated with MUBI or Letterboxd.</p>
       </footer>
     </main>
   </body>
