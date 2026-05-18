@@ -4,6 +4,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 from flask import Flask, Response, render_template, request
+from werkzeug.middleware.proxy_fix import ProxyFix
 
 from mubi2lttrbx import (
     DEFAULT_MAX_FILMS,
@@ -15,6 +16,10 @@ from mubi2lttrbx import (
 
 
 app = Flask(__name__)
+# Trust the single proxy in front of us (Cloud Run, Render, Fly, etc.)
+# so request.scheme/host reflect the public HTTPS URL — needed for the
+# canonical link, og:url, and the absolute URL in /sitemap.xml.
+app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1)
 
 MAX_INPUT_LENGTH = 300
 RATE_LIMIT_REQUESTS = 5
