@@ -1,5 +1,7 @@
 import time
 from collections import defaultdict, deque
+from datetime import datetime, timezone
+from pathlib import Path
 
 from flask import Flask, Response, render_template, request
 
@@ -74,6 +76,38 @@ def add_privacy_headers(response):
 @app.get("/")
 def index():
     return render_template("index.html")
+
+
+@app.get("/robots.txt")
+def robots_txt():
+    body = (
+        "User-agent: *\n"
+        "Allow: /\n"
+        "Disallow: /export\n"
+        "\n"
+        f"Sitemap: {request.url_root}sitemap.xml\n"
+    )
+    return Response(body, content_type="text/plain; charset=utf-8")
+
+
+@app.get("/sitemap.xml")
+def sitemap_xml():
+    template_path = Path(app.root_path) / "templates" / "index.html"
+    lastmod = datetime.fromtimestamp(
+        template_path.stat().st_mtime, tz=timezone.utc
+    ).strftime("%Y-%m-%d")
+    body = (
+        '<?xml version="1.0" encoding="UTF-8"?>\n'
+        '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+        "  <url>\n"
+        f"    <loc>{request.url_root}</loc>\n"
+        f"    <lastmod>{lastmod}</lastmod>\n"
+        "    <changefreq>monthly</changefreq>\n"
+        "    <priority>1.0</priority>\n"
+        "  </url>\n"
+        "</urlset>\n"
+    )
+    return Response(body, content_type="application/xml; charset=utf-8")
 
 
 @app.post("/export")

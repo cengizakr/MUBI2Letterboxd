@@ -3,7 +3,32 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>MUBI to Letterboxd</title>
+
+    <title>MUBI to Letterboxd &mdash; Export your watchlist as a CSV</title>
+    <meta name="description" content="Free tool to export your public MUBI watchlist to a Letterboxd-compatible CSV. No login, no tracking &mdash; works for watchlist, watched films, or a new list.">
+    <meta name="keywords" content="mubi to letterboxd, mubi watchlist export, letterboxd csv import, mubi watchlist letterboxd, mubi export tool">
+    <meta name="author" content="Cengiz &Ccedil;ak&#305;r">
+    <meta name="robots" content="index, follow">
+    <meta name="theme-color" content="#011589">
+
+    <link rel="canonical" href="{{ request.base_url }}">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="MUBI to Letterboxd">
+    <meta property="og:title" content="MUBI to Letterboxd &mdash; Export your watchlist as a CSV">
+    <meta property="og:description" content="Free tool to export your public MUBI watchlist to a Letterboxd-compatible CSV. No login, no tracking.">
+    <meta property="og:url" content="{{ request.base_url }}">
+    <meta property="og:image" content="{{ url_for('static', filename='og-image.png', _external=True) }}">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:locale" content="en_US">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="MUBI to Letterboxd &mdash; Export your watchlist as a CSV">
+    <meta name="twitter:description" content="Free tool to export your public MUBI watchlist to a Letterboxd-compatible CSV. No login, no tracking.">
+    <meta name="twitter:image" content="{{ url_for('static', filename='og-image.png', _external=True) }}">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -170,7 +195,14 @@ Petite Maman,2021</pre>
       </section>
 
       <footer class="footer">
-        <p>Unofficial tool &middot; Not affiliated with MUBI or Letterboxd.</p>
+        <p>
+          Unofficial tool &middot; Not affiliated with MUBI or Letterboxd.
+          <span class="footer-credit">
+            Built by Cengiz &Ccedil;ak&#305;r
+            <a class="footer-link" href="https://www.linkedin.com/in/cengiz-%C3%A7ak%C4%B1r-0060861a6/" target="_blank" rel="noreferrer">LinkedIn</a>
+            <a class="footer-link" href="https://www.instagram.com/cengizakr/" target="_blank" rel="noreferrer">Instagram</a>
+          </span>
+        </p>
       </footer>
     </main>
   </body>

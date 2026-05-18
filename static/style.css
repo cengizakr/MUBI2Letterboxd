@@ -608,6 +608,23 @@ a:hover { color: var(--red); text-decoration-color: var(--red); }
   text-transform: uppercase;
   color: var(--ink-dim);
 }
+.footer-credit {
+  margin-left: 8px;
+  padding-left: 10px;
+  border-left: 1px solid var(--line-2);
+  color: var(--ink);
+}
+.footer-link {
+  margin-left: 10px;
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-color: var(--line-2);
+  text-underline-offset: 3px;
+}
+.footer-link:hover {
+  color: var(--red);
+  text-decoration-color: var(--red);
+}
 
 /* ---------- responsive ---------- */
 
