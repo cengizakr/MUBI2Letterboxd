@@ -23,12 +23,12 @@
 
     <main class="page">
       <section class="intro" aria-labelledby="page-title">
-        <p class="kicker"><span class="kicker-dot" aria-hidden="true"></span>MUBI · Letterboxd</p>
+        <p class="kicker"><span class="kicker-dot" aria-hidden="true"></span>MUBI &middot; Letterboxd</p>
         <h1 id="page-title">Export your MUBI watchlist to Letterboxd.</h1>
         <p class="tagline"><em>Move your watchlist across the aisle.</em></p>
         <p class="summary">
-          Paste your public MUBI profile or watchlist link. We generate a
-          Letterboxd-compatible CSV you can import in one click.
+          Paste your public MUBI profile or watchlist link, pick where it should
+          land on Letterboxd, and download a ready-to-import CSV.
         </p>
         <p class="privacy-badge" role="note">
           <span class="privacy-dot" aria-hidden="true"></span>
@@ -36,11 +36,34 @@
         </p>
       </section>
 
+      <section class="how" aria-labelledby="how-title">
+        <p class="how-eyebrow"><span class="how-eyebrow-line" aria-hidden="true"></span>How it works <span class="how-time">&middot; about 30 seconds</span></p>
+        <h2 id="how-title" class="visually-hidden">How it works</h2>
+        <ol class="how-steps">
+          <li>
+            <span class="how-num">01</span>
+            <p><strong>Paste</strong> your MUBI link</p>
+          </li>
+          <li>
+            <span class="how-num">02</span>
+            <p><strong>Download</strong> the CSV</p>
+          </li>
+          <li>
+            <span class="how-num">03</span>
+            <p><strong>Pick</strong> a destination on Letterboxd</p>
+          </li>
+          <li>
+            <span class="how-num">04</span>
+            <p><strong>Upload</strong> the CSV there</p>
+          </li>
+        </ol>
+      </section>
+
       <div class="workbench">
         <section class="tool" aria-labelledby="form-title">
           <div class="tool-header">
             <h2 id="form-title">Create a Letterboxd-compatible CSV</h2>
-            <p>Paste a link below. Your browser receives the CSV directly &mdash; no upload, no signup.</p>
+            <p>Paste a link and pick where you want it on Letterboxd. Your browser receives the CSV directly &mdash; no upload, no signup.</p>
           </div>
 
           <form action="{{ url_for('export') }}" method="post" class="export-form">
@@ -84,41 +107,66 @@ In the Mood for Love,2000
 Close-Up,1990
 Mulholland Drive,2001
 Petite Maman,2021</pre>
-            <p class="side-note">A simple two-column file. Letterboxd reads it natively.</p>
+            <p class="side-note">A simple two-column file. Letterboxd reads it natively when you import a list or your watched diary.</p>
           </div>
 
           <div class="side-card">
             <p class="side-eyebrow">Good to know</p>
             <dl class="faq">
-              <dt>Do I need to log in?</dt>
-              <dd>No. The tool only reads your public watchlist.</dd>
+              <dt>Do I need to log in here?</dt>
+              <dd>No. This site never touches your Letterboxd account &mdash; you upload the CSV yourself.</dd>
               <dt>Does it work with private watchlists?</dt>
               <dd>No &mdash; your MUBI profile must be public.</dd>
               <dt>Is my data stored?</dt>
               <dd>Never. The CSV is generated in memory and discarded after download.</dd>
-              <dt>What do I do with the file?</dt>
-              <dd>Upload it at <a href="https://letterboxd.com/import/" target="_blank" rel="noreferrer">letterboxd.com/import</a>.</dd>
             </dl>
           </div>
         </aside>
       </div>
 
-      <section class="steps" aria-labelledby="steps-title">
-        <h2 id="steps-title">What to do next</h2>
-        <ol>
-          <li>
-            <span class="num">i</span>
-            <p><strong>Download the CSV.</strong> Paste your MUBI link above and click Download CSV.</p>
-          </li>
-          <li>
-            <span class="num">ii</span>
-            <p><strong>Open Letterboxd import.</strong> Go to <a href="https://letterboxd.com/import/" target="_blank" rel="noreferrer">letterboxd.com/import</a>.</p>
-          </li>
-          <li>
-            <span class="num">iii</span>
-            <p><strong>Upload the file.</strong> Choose the downloaded CSV and import the rows as watchlist items.</p>
-          </li>
-        </ol>
+      <section class="destinations" aria-labelledby="dest-title">
+        <div class="destinations-head">
+          <h2 id="dest-title">Where it lands on Letterboxd</h2>
+          <p>Letterboxd supports importing the same CSV into <strong>three different places</strong>, each with its own entry point. Sign in to Letterboxd first, then follow the steps for the destination you picked. Full reference: <a href="https://letterboxd.com/about/importing-data/" target="_blank" rel="noreferrer">letterboxd.com/about/importing-data</a>.</p>
+        </div>
+
+        <div class="dest-grid">
+          <article class="dest-card" data-dest="watchlist">
+            <p class="dest-tag">Watchlist</p>
+            <h3>Letterboxd watchlist</h3>
+            <p class="dest-desc">Mirror your MUBI watchlist as upcoming films you plan to watch.</p>
+            <ol>
+              <li>Sign in to Letterboxd, then open <a href="https://letterboxd.com/" target="_blank" rel="noreferrer">letterboxd.com/&lt;your-username&gt;/watchlist/</a>.</li>
+              <li>Use the watchlist&apos;s <strong>Import</strong> action (only visible to you as the owner).</li>
+              <li>Upload the downloaded CSV and confirm.</li>
+            </ol>
+            <p class="dest-also">Letterboxd imports the films straight into your watchlist &mdash; no list workaround needed.</p>
+          </article>
+
+          <article class="dest-card" data-dest="watched">
+            <p class="dest-tag">Watched</p>
+            <h3>Watched films</h3>
+            <p class="dest-desc">Mark every MUBI title as already seen in your Letterboxd profile.</p>
+            <ol>
+              <li>Open <a href="https://letterboxd.com/import/" target="_blank" rel="noreferrer">letterboxd.com/import</a>.</li>
+              <li>Upload the downloaded CSV.</li>
+              <li>Review the matches on the preview screen and confirm.</li>
+            </ol>
+            <p class="dest-also">All imported films are marked as watched and affect your diary and stats &mdash; there is no undo.</p>
+          </article>
+
+          <article class="dest-card" data-dest="list">
+            <p class="dest-tag">List</p>
+            <h3>New custom list</h3>
+            <p class="dest-desc">Turn your MUBI watchlist into a standalone Letterboxd list you can share or keep private.</p>
+            <ol>
+              <li>Create a list at <a href="https://letterboxd.com/list/new/" target="_blank" rel="noreferrer">letterboxd.com/list/new</a>.</li>
+              <li>On the list&apos;s edit page, use <strong>Import a list from a CSV file</strong> and upload the CSV.</li>
+              <li>Name the list and save.</li>
+            </ol>
+            <p class="dest-also">Manage your lists at <a href="https://letterboxd.com/" target="_blank" rel="noreferrer">letterboxd.com/&lt;your-username&gt;/lists/</a>.</p>
+          </article>
+        </div>
       </section>
 
       <footer class="footer">

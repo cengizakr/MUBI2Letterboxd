@@ -186,6 +186,91 @@ a:hover { color: var(--red); text-decoration-color: var(--red); }
   box-shadow: 0 0 0 3px rgba(1, 21, 137, 0.18);
 }
 
+/* ---------- how-it-works strip ---------- */
+
+.visually-hidden {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0,0,0,0);
+  white-space: nowrap; border: 0;
+}
+
+.how {
+  border-top: 1px solid var(--line-2);
+  border-bottom: 1px solid var(--line-2);
+  padding: 22px 0 26px;
+}
+
+.how-eyebrow {
+  margin: 0 0 18px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-family: var(--grotesk);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+.how-eyebrow-line {
+  width: 32px; height: 1px;
+  background: var(--red);
+}
+.how-time {
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 14px;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--ink-dim);
+}
+
+.how-steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 24px;
+  counter-reset: how;
+}
+.how-steps li {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: baseline;
+  gap: 12px;
+  padding-right: 12px;
+  border-right: 1px dashed var(--line);
+}
+.how-steps li:last-child { border-right: 0; padding-right: 0; }
+.how-num {
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--red);
+  letter-spacing: 0.08em;
+}
+.how-steps li p {
+  margin: 0;
+  font-family: var(--grotesk);
+  font-size: 14.5px;
+  line-height: 1.45;
+  color: var(--ink);
+}
+.how-steps li strong { font-weight: 600; }
+
+@media (max-width: 880px) {
+  .how-steps { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .how-steps li:nth-child(2) { border-right: 0; padding-right: 0; }
+}
+@media (max-width: 520px) {
+  .how-steps { grid-template-columns: 1fr; }
+  .how-steps li { border-right: 0; padding-right: 0; }
+}
+
 /* ---------- workbench (two-column on desktop) ---------- */
 
 .workbench {
@@ -237,6 +322,7 @@ a:hover { color: var(--red); text-decoration-color: var(--red); }
   text-transform: uppercase;
   color: var(--ink);
 }
+
 .label-tag {
   font-family: var(--mono);
   font-weight: 500;
@@ -421,10 +507,14 @@ a:hover { color: var(--red); text-decoration-color: var(--red); }
   line-height: 1.5;
 }
 
-/* ---------- steps ---------- */
+/* ---------- destinations (where the CSV lands) ---------- */
 
-.steps h2 {
-  margin: 0 0 24px;
+.destinations-head {
+  margin-bottom: 24px;
+  max-width: 60ch;
+}
+.destinations-head h2 {
+  margin: 0 0 8px;
   font-family: var(--serif);
   font-style: normal;
   font-weight: 500;
@@ -432,42 +522,75 @@ a:hover { color: var(--red); text-decoration-color: var(--red); }
   letter-spacing: -0.01em;
   color: var(--ink);
 }
-
-.steps ol {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: grid;
-  gap: 0;
-  border-top: 1px solid var(--line);
-}
-.steps li {
-  display: grid;
-  grid-template-columns: 56px 1fr;
-  gap: 16px;
-  padding: 18px 0;
-  border-bottom: 1px solid var(--line);
-}
-.steps li .num {
-  font-family: var(--serif);
-  font-style: italic;
-  font-size: 28px;
-  line-height: 1;
-  color: var(--red);
-  padding-top: 2px;
-}
-.steps li:nth-child(2) .num { color: var(--ink); }
-.steps li:nth-child(3) .num { color: var(--red); }
-.steps li p {
+.destinations-head p {
   margin: 0;
   font-family: var(--grotesk);
-  font-size: 15.5px;
+  font-size: 15px;
+  color: var(--ink-dim);
   line-height: 1.55;
+}
+
+.dest-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+@media (max-width: 880px) {
+  .dest-grid { grid-template-columns: 1fr; }
+}
+
+.dest-card {
+  padding: 22px 24px;
+  border: 1px solid var(--line-2);
+  background: rgba(255, 252, 244, 0.55);
+  border-radius: 4px;
+  transition: border-color 0.15s, background 0.15s, box-shadow 0.15s;
+}
+
+.dest-tag {
+  margin: 0 0 8px;
+  font-family: var(--grotesk);
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--red);
+}
+.dest-card h3 {
+  margin: 0 0 8px;
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: 22px;
+  letter-spacing: -0.005em;
   color: var(--ink);
 }
-.steps li strong {
+.dest-desc {
+  margin: 0 0 14px;
+  font-family: var(--grotesk);
+  font-size: 14px;
+  color: var(--ink-dim);
+  line-height: 1.5;
+}
+.dest-card ol {
+  list-style: decimal;
+  margin: 0 0 12px;
+  padding-left: 18px;
+  display: grid;
+  gap: 6px;
+}
+.dest-card ol li {
+  font-family: var(--grotesk);
+  font-size: 14px;
   color: var(--ink);
-  font-weight: 600;
+  line-height: 1.5;
+}
+.dest-card ol li strong { font-weight: 600; }
+.dest-also {
+  margin: 0;
+  font-family: var(--grotesk);
+  font-size: 12.5px;
+  color: var(--ink-soft);
+  line-height: 1.5;
 }
 
 /* ---------- footer ---------- */
@@ -489,7 +612,6 @@ a:hover { color: var(--red); text-decoration-color: var(--red); }
 /* ---------- responsive ---------- */
 
 @media (max-width: 600px) {
-  .steps li { grid-template-columns: 40px 1fr; }
   .export-form button { width: 100%; justify-content: center; }
   .privacy-badge { font-size: 14px; padding: 12px 14px; }
 }
